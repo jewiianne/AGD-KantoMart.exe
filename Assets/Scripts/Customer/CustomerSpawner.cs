@@ -47,7 +47,7 @@ public class CustomerSpawner : MonoBehaviour
 
             currentCustomer = Instantiate(prefabToSpawn, spawnPoint.position, Quaternion.identity);
 
-            Debug.Log($"A {selectedData.customerType} entered the mart!");
+            Debug.Log($"A {selectedData.customerName} has entered the mart!");
         }
     }
 } 

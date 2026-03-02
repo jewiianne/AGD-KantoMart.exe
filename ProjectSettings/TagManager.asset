@@ -68,6 +68,12 @@ TagManager:
   - name: Props
     uniqueID: 4249024857
     locked: 0
+  - name: Shelf
+    uniqueID: 3680625161
+    locked: 0
+  - name: UIAssets
+    uniqueID: 3384815591
+    locked: 0
   - name: Player
     uniqueID: 3855950963
     locked: 0
