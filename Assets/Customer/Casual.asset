@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6cb18c946a05bd44a41316cb67100d5, type: 3}
+  m_Name: Casual
+  m_EditorClassIdentifier: Assembly-CSharp::CustomerTraits
+  customerName: Casual
+  customerPrefabs:
+  - {fileID: 6499899541811882726, guid: 7d09ba19f131a244ab43e8cd9c398888, type: 3}
+  - {fileID: 3147695606014787146, guid: f36b69a77fcf5e64a8aa457cc497bd9f, type: 3}
+  - {fileID: 5326070202077643630, guid: ec0b35a17e4e16144aa0d11bee104b43, type: 3}
+  - {fileID: 3178207365059280647, guid: f289d9c1510b3804494b674c05900af5, type: 3}
+  - {fileID: 511308634277530162, guid: 43628b42f99a3b34daef07a152f5339a, type: 3}
+  customerType: 1
+  canUtang: 1
+  isTroubleMaker: 0

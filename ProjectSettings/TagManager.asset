@@ -41,6 +41,33 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Floor
+    uniqueID: 2646506113
+    locked: 0
+  - name: BG
+    uniqueID: 1992223869
+    locked: 0
+  - name: Customer
+    uniqueID: 196192589
+    locked: 0
+  - name: Walls
+    uniqueID: 1270502809
+    locked: 0
+  - name: Walls2
+    uniqueID: 3210624579
+    locked: 0
+  - name: Gate
+    uniqueID: 3468228199
+    locked: 0
+  - name: Counter
+    uniqueID: 1894560199
+    locked: 0
+  - name: CounterBottom
+    uniqueID: 3273274645
+    locked: 0
+  - name: Props
+    uniqueID: 4249024857
+    locked: 0
   - name: Player
     uniqueID: 3855950963
     locked: 0
