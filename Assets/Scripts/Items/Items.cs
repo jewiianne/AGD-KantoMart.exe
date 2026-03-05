@@ -5,11 +5,12 @@ public class Items : ScriptableObject
 {
     public string itemName;
     public float itemPrice;
+    public GameObject itemPrefab;
     public Sprite itemSprite;
-    public GameObject items;
 
     [Header("Restrictions")]
-    public bool isRestricted;
+    public bool isAgeRestricted;
+    public bool isStackable;
     public int stockCount;
     public int maxStock;
 }

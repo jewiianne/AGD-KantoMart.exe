@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Items
   itemName: Piatus
   itemPrice: 20
-  itemSprite: {fileID: 0}
-  items: {fileID: 0}
-  isRestricted: 0
+  itemPrefab: {fileID: 2993675024789406011, guid: 62b510e6e56e20344871d0f09e5c2d4e, type: 3}
+  itemSprite: {fileID: 2953353988480207609, guid: 4df344531adfdc84c88b2c030357bd93, type: 3}
+  isAgeRestricted: 0
+  isStackable: 0
   stockCount: 1
   maxStock: 1

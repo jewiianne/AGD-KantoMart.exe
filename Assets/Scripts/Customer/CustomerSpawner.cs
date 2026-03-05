@@ -1,23 +1,30 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 public class CustomerSpawner : MonoBehaviour
 {
-    public List<CustomerTraits> availableCustomers; 
+    public List<CustomerTraits> availableCustomers;
+    public List<Items> itemOrder;
+
     public Transform spawnPoint;
     public float spawnInterval = 5f;
     public float checkInterval = 1f;
 
+    [Header("UI References")]
+    public GameObject orderPanel;
+    public Image itemPrefab;
+
     private GameObject currentCustomer;
     private bool isSpawning = true;
-
+    
     void Start()
     {
         StartCoroutine(SpawnRoutine());
     }
 
-    private System.Collections.IEnumerator SpawnRoutine()
+    private IEnumerator SpawnRoutine()
     {
         while (isSpawning)
         {
@@ -48,6 +55,41 @@ public class CustomerSpawner : MonoBehaviour
             currentCustomer = Instantiate(prefabToSpawn, spawnPoint.position, Quaternion.identity);
 
             Debug.Log($"A {selectedData.customerName} has entered the mart!");
+
+            CustomerOrder();
+        }
+    }
+
+    public void CustomerOrder()
+    {
+        if (itemOrder.Count == 0 || orderPanel == null)
+        {
+            return;
+        }
+
+        int randomIndex = Random.Range(0, itemOrder.Count);
+        Items selected = itemOrder[randomIndex];
+
+        if (orderPanel != null)
+        {
+            orderPanel.SetActive(true);
+        }
+        
+        if (itemPrefab != null && selected.itemSprite != null)
+        {
+            itemPrefab.sprite = selected.itemSprite;
+            Debug.Log($"Customer ordered: {selected.itemName}");
+        }
+
+    }
+
+    public void ClearOrder()
+    {
+        orderPanel.SetActive(false);
+        if(currentCustomer != null)
+        {
+            Destroy(currentCustomer);
+            currentCustomer = null;
         }
     }
 } 
