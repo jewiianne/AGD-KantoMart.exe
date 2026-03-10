@@ -4,16 +4,7 @@ using System.Collections.Generic;
 public class TakeItem : MonoBehaviour
 {
     public Shelf shelf;
-    public List<Items> itemInStock;
-    public int itemInInventory = 0;
-
     private bool isPlayerInRange = false;
-    public static TakeItem Instance;
-
-    void Awake()
-    {
-        Instance = this;
-    }
 
     void Start()
     {
@@ -22,10 +13,25 @@ public class TakeItem : MonoBehaviour
 
     void Update()
     {
-        if (isPlayerInRange && shelf.stockCount > 0 && Input.GetKeyDown(KeyCode.E))
+        if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
         {
-            itemInInventory++;
-            shelf.RemoveItem();
+            if (shelf != null && shelf.itemInStock.Count > 0)
+            {
+                if (PlayerInventory.Instance.CanReceiveItem())
+                {
+                    Items itemToGive = shelf.itemInStock[0];
+                    PlayerInventory.Instance.ReceiveItem(itemToGive);
+                    shelf.RemoveItem();
+                }
+                else
+                {
+                    Debug.Log("Inventory is full!");
+                }
+            }
+            else 
+            {
+                Debug.Log("The shelf is empty");
+            }
         }
     }
 
@@ -45,10 +51,5 @@ public class TakeItem : MonoBehaviour
             isPlayerInRange = false;
             Debug.Log("Player left the area");
         }
-    }
-
-    public void AddItem(Items newItem)
-    {
-        itemInStock.Add(newItem);
     }
 }

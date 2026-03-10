@@ -88,8 +88,14 @@ public class CustomerSpawner : MonoBehaviour
         if (itemPrefab != null && selected.itemSprite != null)
         {
             itemPrefab.sprite = selected.itemSprite;
-            Debug.Log($"Customer ordered: {selected.itemName}");
         }
+
+        if (SellManager.Instance != null)
+        {
+            SellManager.Instance.UpdateUI(selected);
+        }
+
+        Debug.Log($"Customer ordered: {selected.itemName}");
 
     }
 

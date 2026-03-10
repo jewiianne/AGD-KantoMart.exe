@@ -23,7 +23,7 @@ public class SellItem : MonoBehaviour
 
         if (isPlayerNearWithCustomer)
         {
-            Debug.Log("Player is near with customer.");
+            //Debug.Log("Player is near with customer.");
             if (Input.GetKeyDown(KeyCode.G))
             {
                 sellPanel.SetActive(true);

@@ -3832,7 +3832,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Shelf
   itemInStock:
   - {fileID: 11400000, guid: eaff6561e69843043a0dd57c45dc9f56, type: 2}
-  stockCount: 1
+  - {fileID: 11400000, guid: eaff6561e69843043a0dd57c45dc9f56, type: 2}
+  - {fileID: 11400000, guid: eaff6561e69843043a0dd57c45dc9f56, type: 2}
+  - {fileID: 11400000, guid: eaff6561e69843043a0dd57c45dc9f56, type: 2}
+  - {fileID: 11400000, guid: eaff6561e69843043a0dd57c45dc9f56, type: 2}
+  stockCount: 5
   maxStock: 5
   itemPrefab: {fileID: 5185970961485141249, guid: 62b510e6e56e20344871d0f09e5c2d4e, type: 3}
   itemStockText: {fileID: 2007182247}
@@ -4701,8 +4705,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0d0bda0312c5ca4489b281c8e464eff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInventory
-  currentItems:
-  - {fileID: 11400000, guid: eaff6561e69843043a0dd57c45dc9f56, type: 2}
+  currentItems: []
+  maxSlot: 5
 --- !u!114 &1075122959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12547,7 +12551,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1/5
+  m_text: 5/5
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a89fa14b10d46a99122fd4f73fca9a2, type: 2}
   m_sharedMaterial: {fileID: 2140474, guid: 8a89fa14b10d46a99122fd4f73fca9a2, type: 2}

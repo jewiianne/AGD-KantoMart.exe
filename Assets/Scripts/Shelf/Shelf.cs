@@ -16,7 +16,16 @@ public class Shelf : MonoBehaviour
 
     void Start()
     {
-        UpdateShelfVisual();
+        if (itemInStock.Count > 0 && itemInStock.Count < stockCount)
+        {
+            Items prototype = itemInStock[0];
+            while (itemInStock.Count < stockCount)
+            {
+                itemInStock.Add(prototype);
+            }
+        }
+    
+    UpdateShelfVisual();
     }
 
     void AddStock()
@@ -39,7 +48,7 @@ public class Shelf : MonoBehaviour
 
             if(itemInStock != null && itemInStock.Count > 0)
             {
-                itemInStock[0].stockCount = stockCount;
+                itemInStock.RemoveAt(0);
             }
 
             UpdateShelfVisual();

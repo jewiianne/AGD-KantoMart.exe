@@ -1,6 +1,8 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Item", menuName = "KantoMart/Item")]
+
+[System.Serializable]
 public class Items : ScriptableObject
 {
     public string itemName;

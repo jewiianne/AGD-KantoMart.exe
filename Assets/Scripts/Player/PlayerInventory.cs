@@ -5,6 +5,8 @@ public class PlayerInventory : MonoBehaviour
 {
     public List<Items> currentItems = new List<Items>();
 
+    public int maxSlot = 5;
+
     public static PlayerInventory Instance;
 
     void Awake()
@@ -12,25 +14,21 @@ public class PlayerInventory : MonoBehaviour
         Instance = this;
     }
 
-    void Update()
+    public bool CanReceiveItem()
     {
-        if (TakeItem.Instance != null && TakeItem.Instance.itemInInventory > 0)
-        {
-            TransferItemToInventory();
-        }
+        return currentItems.Count < maxSlot;
     }
 
-    void TransferItemToInventory()
+    public void ReceiveItem(Items item)
     {
-        while (TakeItem.Instance.itemInInventory > 0)
+        if(CanReceiveItem())
         {
-            Items itemToAdd = TakeItem.Instance.itemInStock[0];
-            string detectName = itemToAdd.itemName;
-            Debug.Log("Player received item: " + detectName);
-    
-            currentItems.Add(itemToAdd);
-            TakeItem.Instance.itemInStock.RemoveAt(0);
-            TakeItem.Instance.itemInInventory--;
+            currentItems.Add(item);
+            Debug.Log("Added: " + item.itemName + " to inventory");
+        }
+        else
+        {
+            Debug.Log("Inventory is full");
         }
     }
 }

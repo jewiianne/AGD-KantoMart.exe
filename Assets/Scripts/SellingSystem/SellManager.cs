@@ -33,7 +33,6 @@ public class SellManager : MonoBehaviour
 
         if (playerHas != null && playerHas.Contains(customerWants[0]))
         {
-            UpdateUI(customerWants); 
             sellPanel.SetActive(true);
         }
         else
@@ -42,9 +41,15 @@ public class SellManager : MonoBehaviour
         }
     }
 
-    void UpdateUI(List<Items> itemsInInventory)
+    public void UpdateUI(Items item)
     {
-        Items item = itemsInInventory[0];
+        if (item == null)
+        {
+            itemsText.text = "Item: None";
+            totalPriceText.text = "Price: 0.00";
+            paymentMethodText.text = "Payment: None";
+            return;
+        }
 
         itemsText.text = "Item: " + item.itemName;
         currentTotalPrice = item.itemPrice;
@@ -52,6 +57,9 @@ public class SellManager : MonoBehaviour
         
         string method = (Random.value > 0.1f) ? "Cash" : "Utang"; 
         paymentMethodText.text = "Payment: " + method;
+
+        itemsText.ForceMeshUpdate();
+        totalPriceText.ForceMeshUpdate();
     }
 
     public void SellButton()
@@ -60,28 +68,29 @@ public class SellManager : MonoBehaviour
         List<Items> customerOrder = CustomerSpawner.Instance.itemOrder;
 
         if (playerInventory.Count > 0)
-    {
-        Items itemToSell = playerInventory[0];
-
-        if (customerOrder.Count > 0 && customerOrder.Contains(itemToSell))
         {
-            MoneyManager.Instance.currentMoney += itemToSell.itemPrice; 
-            MoneyManager.Instance.UpdateMoney();
-            Debug.Log($"Sold {itemToSell.itemName} for {itemToSell.itemPrice}!");
+            Items itemToSell = playerInventory[0];
+
+            if (customerOrder.Count > 0 && customerOrder.Contains(itemToSell))
+            {
+                MoneyManager.Instance.currentMoney += itemToSell.itemPrice; 
+                MoneyManager.Instance.UpdateMoney();
+                Debug.Log($"Sold {itemToSell.itemName} for {itemToSell.itemPrice}!");
+            }
+            else
+            {
+                Debug.Log($"Sold {itemToSell.itemName}, but customer didn't want it. No money gained.");
+            }
+            itemToSell.stockCount--;
+            playerInventory.Remove(itemToSell);
+
+            FinishTransaction();
         }
+
         else
         {
-            Debug.Log($"Sold {itemToSell.itemName}, but customer didn't want it. No money gained.");
+            Debug.Log("Transaction failed: Your inventory is empty!");
         }
-        itemToSell.stockCount--;
-        playerInventory.Remove(itemToSell);
-
-        FinishTransaction();
-    }
-    else
-    {
-        Debug.Log("Transaction failed: Your inventory is empty!");
-    }
     }
 
     public void DenyButton()

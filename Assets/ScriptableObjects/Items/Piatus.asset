@@ -18,5 +18,5 @@ MonoBehaviour:
   itemSprite: {fileID: 2953353988480207609, guid: 4df344531adfdc84c88b2c030357bd93, type: 3}
   isAgeRestricted: 0
   isStackable: 0
-  stockCount: 1
-  maxStock: 1
+  stockCount: -2
+  maxStock: 5
