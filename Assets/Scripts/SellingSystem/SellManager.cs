@@ -6,44 +6,93 @@ using TMPro;
 
 public class SellManager : MonoBehaviour
 {
-    public List<Items> availableItems;
-
     public float currentTotalPrice = 0;
-
+    
+    public GameObject sellPanel;
     public TextMeshProUGUI itemsText;
     public TextMeshProUGUI totalPriceText;
     public TextMeshProUGUI paymentMethodText;
 
-    void Start()
+    public static SellManager Instance;
+
+    void Awake()
     {
-        if (availableItems != null && availableItems.Count > 0)
+        Instance = this;
+        sellPanel.SetActive(false);
+    }
+
+    public void OpenSellPanel()
+    {
+        if (CustomerSpawner.Instance == null || CustomerSpawner.Instance.currentCustomer == null)
         {
-            DisplayItems(1);
-            PaymentMethod();
+            return;
+        }
+
+        List<Items> playerHas = PlayerInventory.Instance.currentItems;
+        List<Items> customerWants = CustomerSpawner.Instance.itemOrder;
+
+        if (playerHas != null && playerHas.Contains(customerWants[0]))
+        {
+            UpdateUI(customerWants); 
+            sellPanel.SetActive(true);
+        }
+        else
+        {
+            Debug.Log("You don't have any items");
         }
     }
 
-    void DisplayItems(int index)
+    void UpdateUI(List<Items> itemsInInventory)
     {
-        Items selected = availableItems[index];
-        itemsText.text = "Items: " + selected.itemName;
+        Items item = itemsInInventory[0];
 
-        currentTotalPrice = selected.itemPrice;
-        totalPriceText.text = "Total Price: " + currentTotalPrice.ToString();
+        itemsText.text = "Item: " + item.itemName;
+        currentTotalPrice = item.itemPrice;
+        totalPriceText.text = "Price: " + currentTotalPrice.ToString("F2");
+        
+        string method = (Random.value > 0.1f) ? "Cash" : "Utang"; 
+        paymentMethodText.text = "Payment: " + method;
     }
 
-    void PaymentMethod()
+    public void SellButton()
     {
-        string method = (Random.value > 0.01f)? "Cash" : "Utang";
-        paymentMethodText.text = "Payment Method: " + method;
+        List<Items> playerInventory = PlayerInventory.Instance.currentItems;
+        List<Items> customerOrder = CustomerSpawner.Instance.itemOrder;
+
+        if (playerInventory.Count > 0)
+    {
+        Items itemToSell = playerInventory[0];
+
+        if (customerOrder.Count > 0 && customerOrder.Contains(itemToSell))
+        {
+            MoneyManager.Instance.currentMoney += itemToSell.itemPrice; 
+            MoneyManager.Instance.UpdateMoney();
+            Debug.Log($"Sold {itemToSell.itemName} for {itemToSell.itemPrice}!");
+        }
+        else
+        {
+            Debug.Log($"Sold {itemToSell.itemName}, but customer didn't want it. No money gained.");
+        }
+        itemToSell.stockCount--;
+        playerInventory.Remove(itemToSell);
+
+        FinishTransaction();
+    }
+    else
+    {
+        Debug.Log("Transaction failed: Your inventory is empty!");
+    }
     }
 
-    public IEnumerator ResetDisplayItems()
+    public void DenyButton()
     {
-        yield return new WaitForSeconds(1.5f);
-        itemsText.text = "Items: None";
-        totalPriceText.text = "Total Price: 0";
-        paymentMethodText.text = "Payment Method: None";
-        currentTotalPrice = 0;
+        Debug.Log("Sale Denied.");
+        FinishTransaction();
+    }
+
+    private void FinishTransaction()
+    {
+        sellPanel.SetActive(false);
+        CustomerSpawner.Instance.ClearOrder();
     }
 }

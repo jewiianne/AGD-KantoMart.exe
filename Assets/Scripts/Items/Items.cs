@@ -13,4 +13,11 @@ public class Items : ScriptableObject
     public bool isStackable;
     public int stockCount;
     public int maxStock;
+
+    public static Items Instance;
+
+    void Awake()
+    {
+        Instance = this;
+    }   
 }

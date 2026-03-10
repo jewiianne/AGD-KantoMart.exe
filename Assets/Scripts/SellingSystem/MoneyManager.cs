@@ -9,15 +9,18 @@ public class MoneyManager : MonoBehaviour
     public float currentMoney = 0;
 
     public TextMeshProUGUI MoneyText;
-    public Button sellButton;
-    public Button denyButton;
+
+    public static MoneyManager Instance;
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
         currentMoney = 100;
         MoneyText.text = currentMoney.ToString();
-
-        sellButton.onClick.AddListener(SellButton);
     }
 
     void Update()
@@ -25,19 +28,17 @@ public class MoneyManager : MonoBehaviour
         
     }
 
-    public void SellButton()
+    public void UpdateMoney()
     {
         SellManager selected = sellManagerPrice;
         currentMoney += sellManagerPrice.currentTotalPrice;
         MoneyText.text = currentMoney.ToString();
 
         sellManagerPrice.currentTotalPrice = 0;
-
-        StartCoroutine (sellManagerPrice.ResetDisplayItems());
     }
 
-    public void DenyButton()
-    {
-        StartCoroutine (sellManagerPrice.ResetDisplayItems());
-    }
+    // public void DenyButton()
+    // {
+    //     StartCoroutine (sellManagerPrice.ResetDisplayItems());
+    // }
 }

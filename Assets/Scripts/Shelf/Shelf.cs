@@ -16,34 +16,53 @@ public class Shelf : MonoBehaviour
 
     void Start()
     {
-        if (itemInStock != null && itemInStock.Count > 0 &&stockCount > 0)
-        {
-            UpdateShelfVisual(0);
-        }
+        UpdateShelfVisual();
     }
 
-    void AddStock(int index)
+    void AddStock()
     {
         if(stockCount >= maxStock)
         {
             Debug.Log("Shelf is currently full");
             return;
         }
-
-        Debug.Log("Adding stock for: " + itemInStock[index].itemName);
         stockCount++;
-        UpdateShelfVisual(index);
+
+        UpdateShelfVisual();
     }
 
-    void UpdateShelfVisual(int index)
+    public void RemoveItem() 
     {
-        Items selected = itemInStock[index];
-
-        if (itemPrefab != null && stockCount > 0)
+        if (stockCount > 0)
         {
-            GetComponent<SpriteRenderer>().sprite = selected.itemSprite;
+            stockCount--;
+
+            if(itemInStock != null && itemInStock.Count > 0)
+            {
+                itemInStock[0].stockCount = stockCount;
+            }
+
+            UpdateShelfVisual();
+        }
+    }
+
+    public void UpdateShelfVisual()
+    {
+        if (itemStockText != null)
+        {
+            itemStockText.text = $"{stockCount}/{maxStock}";
         }
 
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        
+        if (stockCount > 0 && itemInStock != null && itemInStock.Count > 0)
+        {
+            sr.sprite = itemInStock[0].itemSprite;
+        }
+        else
+        {
+            sr.sprite = null; 
+        }
     }
 
     void OnValidate()
@@ -53,19 +72,4 @@ public class Shelf : MonoBehaviour
             itemStockText.text = $"{stockCount}/{maxStock}";
         }
     }
-
-    // public void TakeItem(PlayerInventory inventory)
-    // {
-    //     if(stockCount > 0)
-    //     {
-    //         stockCount--;
-    //         inventory.AddItem(item);
-    //         UpdateShelfVisual();
-    //     }
-    //     else
-    //     {
-    //         Debug.Log("Out of stock!");
-    //     }
-    // }
-    
 }

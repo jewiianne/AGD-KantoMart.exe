@@ -15,9 +15,16 @@ public class CustomerSpawner : MonoBehaviour
     [Header("UI References")]
     public GameObject orderPanel;
     public Image itemPrefab;
-
-    private GameObject currentCustomer;
+    public GameObject currentCustomer;
+    
     private bool isSpawning = true;
+
+    public static CustomerSpawner Instance;
+
+    void Awake()
+    {
+        Instance = this;
+    }
     
     void Start()
     {
@@ -42,7 +49,10 @@ public class CustomerSpawner : MonoBehaviour
 
     public void SpawnRandomCustomer()
     {
-        if (availableCustomers.Count == 0 || spawnPoint == null) return;
+        if (availableCustomers.Count == 0 || spawnPoint == null)
+        {
+            return;
+        }
 
         int randomIndex = Random.Range(0, availableCustomers.Count);
         CustomerTraits selectedData = availableCustomers[randomIndex];
