@@ -6,9 +6,9 @@ using TMPro;
 
 public class Shelf : MonoBehaviour
 {
-    public List<Items> itemInStock;
+    public List<Items> itemInStock = new List<Items>();
 
-    public int stockCount;
+    public int stockCount => itemInStock.Count;
     public int maxStock = 5;
 
     public SpriteRenderer itemPrefab;
@@ -16,40 +16,50 @@ public class Shelf : MonoBehaviour
 
     void Start()
     {
-        if (itemInStock.Count > 0 && itemInStock.Count < stockCount)
-        {
-            Items prototype = itemInStock[0];
-            while (itemInStock.Count < stockCount)
-            {
-                itemInStock.Add(prototype);
-            }
-        }
-    
-    UpdateShelfVisual();
+        UpdateShelfVisual();
     }
 
-    void AddStock()
+    public void RestockShelf()
     {
-        if(stockCount >= maxStock)
+        if (itemInStock.Count >= maxStock)
+        {
+            Debug.Log("Shelf is already fully stocked");
+            return;
+        }
+
+        if(PlayerInventory.Instance != null && PlayerInventory.Instance.currentItems.Count > 0)
+        {
+            Items itemToRestock = PlayerInventory.Instance.currentItems[0];
+            PlayerInventory.Instance.currentItems.RemoveAt(0);
+
+            itemInStock.Add(itemToRestock);
+
+            UpdateShelfVisual();
+        }
+        else
+        {
+            Debug.Log("No items in inventory to restock the shelf");
+            return;
+        }
+    }
+
+    void AddStock(Items item)
+    {
+        if(itemInStock.Count >= maxStock)
         {
             Debug.Log("Shelf is currently full");
             return;
         }
-        stockCount++;
+        itemInStock.Add(item);
 
         UpdateShelfVisual();
     }
 
     public void RemoveItem() 
     {
-        if (stockCount > 0)
+        if (itemInStock.Count > 0)
         {
-            stockCount--;
-
-            if(itemInStock != null && itemInStock.Count > 0)
-            {
-                itemInStock.RemoveAt(0);
-            }
+            itemInStock.RemoveAt(0);
 
             UpdateShelfVisual();
         }
@@ -59,7 +69,7 @@ public class Shelf : MonoBehaviour
     {
         if (itemStockText != null)
         {
-            itemStockText.text = $"{stockCount}/{maxStock}";
+            itemStockText.text = $"{itemInStock.Count}/{maxStock}";
         }
 
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
@@ -78,7 +88,8 @@ public class Shelf : MonoBehaviour
     {
         if (itemStockText != null)
         {
-            itemStockText.text = $"{stockCount}/{maxStock}";
+            int count = itemInStock != null ? itemInStock.Count : 0;
+            itemStockText.text = $"{count}/{maxStock}";
         }
     }
 }

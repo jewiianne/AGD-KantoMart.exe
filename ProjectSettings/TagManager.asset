@@ -72,17 +72,20 @@ TagManager:
   - name: Shelf
     uniqueID: 3680625161
     locked: 0
-  - name: ItemStockText
-    uniqueID: 3802085383
-    locked: 0
   - name: UIAssets
     uniqueID: 3384815591
     locked: 0
   - name: Items
     uniqueID: 4003820383
     locked: 0
+  - name: BoxItems
+    uniqueID: 3906201893
+    locked: 0
   - name: Player
     uniqueID: 3855950963
+    locked: 0
+  - name: ItemStockText
+    uniqueID: 3802085383
     locked: 0
   m_RenderingLayers:
   - Default

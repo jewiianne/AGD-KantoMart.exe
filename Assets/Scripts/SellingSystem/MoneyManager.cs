@@ -19,14 +19,10 @@ public class MoneyManager : MonoBehaviour
 
     void Start()
     {
-        currentMoney = 100;
+        currentMoney = 80;
         MoneyText.text = currentMoney.ToString();
     }
 
-    void Update()
-    {
-        
-    }
 
     public void UpdateMoney()
     {
@@ -36,9 +32,4 @@ public class MoneyManager : MonoBehaviour
 
         sellManagerPrice.currentTotalPrice = 0;
     }
-
-    // public void DenyButton()
-    // {
-    //     StartCoroutine (sellManagerPrice.ResetDisplayItems());
-    // }
 }

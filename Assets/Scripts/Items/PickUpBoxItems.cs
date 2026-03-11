@@ -1,36 +1,38 @@
 using UnityEngine;
-using System.Collections.Generic;
 
-public class TakeItem : MonoBehaviour
+public class PickUpBoxItems : MonoBehaviour
 {
-    public Shelf shelf;
+    public BoxItems boxItem;
     private bool isPlayerInRange = false;
 
-    void Start()
-    {
-        shelf = GetComponentInParent<Shelf>();
-    }
-
-    void Update()
+     void Update()
     {
         if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
         {
-            if (shelf != null && shelf.itemInStock.Count > 0)
+            if (PlayerInventory.Instance != null && boxItem != null)
             {
-                if (PlayerInventory.Instance.CanReceiveItem())
+                int itemsAdded = 0;
+                int totalToReceive = boxItem.boxItemInsideCount;
+
+                for (int i = 0; i < totalToReceive; i++)
                 {
-                    Items itemToReceive = shelf.itemInStock[0];
-                    PlayerInventory.Instance.ReceiveItem(itemToReceive);
-                    shelf.RemoveItem();
+                    if (PlayerInventory.Instance.CanReceiveItem())
+                    {
+                        PlayerInventory.Instance.ReceiveItem(boxItem.itemData);
+                        itemsAdded++;
+                    }
+                    else
+                    {
+                        Debug.Log("Picked up " + itemsAdded + "x " + boxItem.boxItemName);
+                        break;
+                    }
                 }
-                else
+
+                if (itemsAdded > 0)
                 {
-                    Debug.Log("Inventory is full!");
+                    Debug.Log("Picked up " + itemsAdded + "x " + boxItem.boxItemName);
+                    Destroy(gameObject);
                 }
-            }
-            else 
-            {
-                Debug.Log("The shelf is empty");
             }
         }
     }
