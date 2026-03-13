@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d24072722e5cbfa419416921d21013fb, type: 3}
-  m_Name: MarlboruRed
+  m_Name: Cigarettes
   m_EditorClassIdentifier: Assembly-CSharp::Items
-  itemName: MarlboruRed
+  itemName: Cigarettes
   itemPrice: 50
-  itemSprite: {fileID: 0}
-  items: {fileID: 0}
-  isRestricted: 1
+  itemPrefab: {fileID: 7399342381989215263, guid: 5d0f5d3ade1151844aecc8515fbcd25c, type: 3}
+  itemSprite: {fileID: 5647716910206868246, guid: e5cf49a83cdbfb34eae30082a43546f3, type: 3}
+  isAgeRestricted: 0
+  isStackable: 0
   stockCount: 1
   maxStock: 1

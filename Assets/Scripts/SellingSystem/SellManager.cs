@@ -65,37 +65,36 @@ public class SellManager : MonoBehaviour
     public void SellButton()
     {
         List<Items> playerInventory = PlayerInventory.Instance.currentItems;
-        List<Items> customerOrder = CustomerSpawner.Instance.itemOrder;
+        Items wantedItem = CustomerSpawner.Instance.currentItem;
 
         if (playerInventory.Count > 0)
         {
             Items itemToSell = playerInventory[0];
 
-            if (customerOrder.Count > 0 && customerOrder.Contains(itemToSell))
+            if (wantedItem != null && itemToSell == wantedItem)
             {
                 MoneyManager.Instance.currentMoney += itemToSell.itemPrice; 
                 MoneyManager.Instance.UpdateMoney();
+
                 Debug.Log($"Sold {itemToSell.itemName} for {itemToSell.itemPrice}!");
             }
+
             else
             {
-                Debug.Log($"Sold {itemToSell.itemName}, but customer didn't want it. No money gained.");
+                Debug.Log($"Sold {itemToSell.itemName}, but customer didn't want it. No money gained.");   
             }
+            
             itemToSell.stockCount--;
             playerInventory.Remove(itemToSell);
 
             FinishTransaction();
-        }
-
-        else
-        {
-            Debug.Log("Transaction failed: Your inventory is empty!");
         }
     }
 
     public void DenyButton()
     {
         Debug.Log("Sale Denied.");
+        ReputationManager.Instance.DenySale();
         FinishTransaction();
     }
 

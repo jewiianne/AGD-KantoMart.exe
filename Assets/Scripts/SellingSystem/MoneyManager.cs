@@ -4,8 +4,6 @@ using TMPro;
 
 public class MoneyManager : MonoBehaviour
 {
-    public SellManager sellManagerPrice;
-
     public float currentMoney = 0;
 
     public TextMeshProUGUI MoneyText;
@@ -26,10 +24,6 @@ public class MoneyManager : MonoBehaviour
 
     public void UpdateMoney()
     {
-        SellManager selected = sellManagerPrice;
-        currentMoney += sellManagerPrice.currentTotalPrice;
         MoneyText.text = currentMoney.ToString();
-
-        sellManagerPrice.currentTotalPrice = 0;
     }
 }

@@ -5,9 +5,12 @@ using System.Collections.Generic;
 
 public class CustomerSpawner : MonoBehaviour
 {
+    [Header("References")]
     public List<CustomerTraits> availableCustomers;
     public List<Items> itemOrder;
+    public Items currentItem;
 
+    [Header("Spawner Settings")]
     public Transform spawnPoint;
     public float spawnInterval = 5f;
     public float checkInterval = 1f;
@@ -18,12 +21,15 @@ public class CustomerSpawner : MonoBehaviour
     public GameObject currentCustomer;
     
     private bool isSpawning = true;
-
+    public float lastSpawnTime;
+    public bool isDelayTime = false;
+    private float initializationTime;
     public static CustomerSpawner Instance;
 
     void Awake()
     {
         Instance = this;
+        initializationTime = Time.time;
     }
     
     void Start()
@@ -63,14 +69,16 @@ public class CustomerSpawner : MonoBehaviour
             GameObject prefabToSpawn = selectedData.customerPrefabs[randomPrefabIndex];
 
             currentCustomer = Instantiate(prefabToSpawn, spawnPoint.position, Quaternion.identity);
+            lastSpawnTime = Time.time;
+            isDelayTime = true;
 
-            Debug.Log($"A {selectedData.customerName} has entered the mart!");
+            CustomerOrder(selectedData);
 
-            CustomerOrder();
+            Debug.Log($"A {selectedData.customerType} has entered the mart!");
         }
     }
 
-    public void CustomerOrder()
+    public void CustomerOrder(CustomerTraits traits)
     {
         if (itemOrder.Count == 0 || orderPanel == null)
         {
@@ -78,24 +86,24 @@ public class CustomerSpawner : MonoBehaviour
         }
 
         int randomIndex = Random.Range(0, itemOrder.Count);
-        Items selected = itemOrder[randomIndex];
+        currentItem = itemOrder[randomIndex];
 
         if (orderPanel != null)
         {
             orderPanel.SetActive(true);
         }
         
-        if (itemPrefab != null && selected.itemSprite != null)
+        if (itemPrefab != null && currentItem.itemSprite != null)
         {
-            itemPrefab.sprite = selected.itemSprite;
+            itemPrefab.sprite = currentItem.itemSprite;
         }
 
         if (SellManager.Instance != null)
         {
-            SellManager.Instance.UpdateUI(selected);
+            SellManager.Instance.UpdateUI(currentItem);
         }
 
-        Debug.Log($"Customer ordered: {selected.itemName}");
+        Debug.Log(traits.customerType + " ordered: " + currentItem.itemName);
 
     }
 
