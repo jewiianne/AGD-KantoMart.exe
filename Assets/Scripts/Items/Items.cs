@@ -7,6 +7,7 @@ public class Items : ScriptableObject
 {
     public string itemName;
     public float itemPrice;
+    public float basePrice;
     public GameObject itemPrefab;
     public Sprite itemSprite;
 
@@ -18,6 +19,10 @@ public class Items : ScriptableObject
 
     public static Items Instance;
 
+    public void OnEnable()
+    {
+        itemPrice = basePrice;
+    }
     void Awake()
     {
         Instance = this;

@@ -12,6 +12,7 @@ public class SellManager : MonoBehaviour
     public TextMeshProUGUI itemsText;
     public TextMeshProUGUI totalPriceText;
     public TextMeshProUGUI paymentMethodText;
+    public string currentPaymentMethod;
 
     public static SellManager Instance;
 
@@ -55,8 +56,8 @@ public class SellManager : MonoBehaviour
         currentTotalPrice = item.itemPrice;
         totalPriceText.text = "Price: " + currentTotalPrice.ToString("F2");
         
-        string method = (Random.value > 0.1f) ? "Cash" : "Utang"; 
-        paymentMethodText.text = "Payment: " + method;
+        currentPaymentMethod = (Random.value > 0.1f) ? "Cash" : "Utang"; 
+        paymentMethodText.text = "Payment: " + currentPaymentMethod;
 
         itemsText.ForceMeshUpdate();
         totalPriceText.ForceMeshUpdate();
@@ -69,23 +70,33 @@ public class SellManager : MonoBehaviour
 
         if (playerInventory.Count > 0)
         {
-            Items itemToSell = playerInventory[0];
+            Items itemToSell = playerInventory[PlayerInventory.Instance.selectedSlotIndex];
 
             if (wantedItem != null && itemToSell == wantedItem)
             {
-                MoneyManager.Instance.currentMoney += itemToSell.itemPrice; 
-                MoneyManager.Instance.UpdateMoney();
+                if (currentPaymentMethod == "Cash")
+                {
+                    MoneyManager.Instance.currentMoney += itemToSell.itemPrice; 
+                    MoneyManager.Instance.UpdateMoney();
+                    ReputationManager.Instance.RightItem();
 
-                Debug.Log($"Sold {itemToSell.itemName} for {itemToSell.itemPrice}!");
+                    Debug.Log($"Sold {itemToSell.itemName} for {itemToSell.itemPrice}");   
+                }
+
+                else
+                {
+                    UtangSystem(itemToSell);  
+                }
             }
 
             else
             {
-                Debug.Log($"Sold {itemToSell.itemName}, but customer didn't want it. No money gained.");   
+                ReputationManager.Instance.WrongItem();
             }
             
             itemToSell.stockCount--;
             playerInventory.Remove(itemToSell);
+            PlayerInventory.Instance.UpdateInventoryUI();
 
             FinishTransaction();
         }
@@ -93,9 +104,23 @@ public class SellManager : MonoBehaviour
 
     public void DenyButton()
     {
-        Debug.Log("Sale Denied.");
         ReputationManager.Instance.DenySale();
         FinishTransaction();
+    }
+
+    void UtangSystem(Items itemToSell)
+    {
+        if (Random.value > 0.5f)
+        {
+            MoneyManager.Instance.currentMoney += itemToSell.itemPrice; 
+            MoneyManager.Instance.UpdateMoney();
+            ReputationManager.Instance.UtangAddReputation();
+        }
+
+        else
+        {
+            ReputationManager.Instance.UtangMinusReputation();    
+        }
     }
 
     private void FinishTransaction()

@@ -23,22 +23,16 @@ public class CustomerSpawner : MonoBehaviour
     private bool isSpawning = true;
     public float lastSpawnTime;
     public bool isDelayTime = false;
-    private float initializationTime;
     public static CustomerSpawner Instance;
 
     void Awake()
     {
         Instance = this;
-        initializationTime = Time.time;
-    }
-    
-    void Start()
-    {
-        StartCoroutine(SpawnRoutine());
     }
 
-    private IEnumerator SpawnRoutine()
+    public IEnumerator SpawnRoutine()
     {
+        isSpawning = true;
         while (isSpawning)
         {
             if (currentCustomer == null)
@@ -112,8 +106,17 @@ public class CustomerSpawner : MonoBehaviour
         orderPanel.SetActive(false);
         if(currentCustomer != null)
         {
+            if(LevelManager.Instance != null)
+            {
+                LevelManager.Instance.CustomerServed();
+            }
             Destroy(currentCustomer);
             currentCustomer = null;
         }
+    }
+
+    public void StopSpawning()
+    {
+        isSpawning = false;
     }
 } 

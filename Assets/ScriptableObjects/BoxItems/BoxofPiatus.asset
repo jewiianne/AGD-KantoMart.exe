@@ -15,6 +15,6 @@ MonoBehaviour:
   itemData: {fileID: 11400000, guid: eaff6561e69843043a0dd57c45dc9f56, type: 2}
   boxItemName: Piatus
   boxItemPrefab: {fileID: 6117296024058132606, guid: 955841f6382c328409cb61bbb1563b22, type: 3}
-  boxItemSprite: {fileID: 0}
+  boxItemSprite: {fileID: 6469511858323066639, guid: 80459e4b9aee736409bbfdfd0eff8f7d, type: 3}
   boxItemPrice: 80
   boxItemInsideCount: 5

@@ -14,7 +14,7 @@ TagManager:
   - Water
   - UI
   - Customer
-  - 
+  - Shelf
   - 
   - 
   - 
@@ -87,6 +87,9 @@ TagManager:
     locked: 0
   - name: ItemStockText
     uniqueID: 3802085383
+    locked: 0
+  - name: UI
+    uniqueID: 1066516067
     locked: 0
   m_RenderingLayers:
   - Default

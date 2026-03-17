@@ -27,20 +27,34 @@ public class Shelf : MonoBehaviour
             return;
         }
 
-        if(PlayerInventory.Instance != null && PlayerInventory.Instance.currentItems.Count > 0)
+        int heldIndex = PlayerInventory.Instance.selectedSlotIndex;
+
+        if (heldIndex < PlayerInventory.Instance.currentItems.Count)
         {
-            Items itemToRestock = PlayerInventory.Instance.currentItems[0];
-            PlayerInventory.Instance.currentItems.RemoveAt(0);
+            Items item = PlayerInventory.Instance.currentItems[heldIndex];
+            PlayerInventory.Instance.currentItems.RemoveAt(heldIndex);
+            itemInStock.Add(item);
+        }
+        else if (heldIndex < (PlayerInventory.Instance.currentItems.Count + PlayerInventory.Instance.currentBoxItems.Count))
+        {
+            int boxIndex = heldIndex - PlayerInventory.Instance.currentItems.Count;
+            BoxItems currentBox = PlayerInventory.Instance.currentBoxItems[boxIndex];
 
-            itemInStock.Add(itemToRestock);
+            itemInStock.Add(currentBox.itemData);
+            currentBox.boxItemInsideCount--;
 
-            UpdateShelfVisual();
+            if (currentBox.boxItemInsideCount <= 0)
+            {
+                PlayerInventory.Instance.currentBoxItems.RemoveAt(boxIndex);
+            }
         }
         else
         {
-            Debug.Log("No items in inventory to restock the shelf");
-            return;
+            Debug.Log("No Item to this slot");
         }
+        
+        PlayerInventory.Instance.UpdateInventoryUI();
+        UpdateShelfVisual();
     }
 
     void AddStock(Items item)

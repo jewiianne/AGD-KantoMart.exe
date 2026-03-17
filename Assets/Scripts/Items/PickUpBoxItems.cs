@@ -11,27 +11,16 @@ public class PickUpBoxItems : MonoBehaviour
         {
             if (PlayerInventory.Instance != null && boxItem != null)
             {
-                int itemsAdded = 0;
-                int totalToReceive = boxItem.boxItemInsideCount;
-
-                for (int i = 0; i < totalToReceive; i++)
+                if (PlayerInventory.Instance.CanReceiveBox())
                 {
-                    if (PlayerInventory.Instance.CanReceiveItem())
-                    {
-                        PlayerInventory.Instance.ReceiveItem(boxItem.itemData);
-                        itemsAdded++;
-                    }
-                    else
-                    {
-                        Debug.Log("Picked up " + itemsAdded + "x " + boxItem.boxItemName);
-                        break;
-                    }
-                }
-
-                if (itemsAdded > 0)
-                {
-                    Debug.Log("Picked up " + itemsAdded + "x " + boxItem.boxItemName);
+                    PlayerInventory.Instance.ReceiveBox(boxItem);
+                    
+                    Debug.Log("Picked up the box: " + boxItem.boxItemName);
                     Destroy(gameObject);
+                }
+                else
+                {
+                    Debug.Log("Inventory full, cannot carry box!");
                 }
             }
         }

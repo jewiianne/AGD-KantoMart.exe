@@ -19,7 +19,7 @@ public class ReputationManager : MonoBehaviour
 
     void Start()
     {
-        reputation = 70;
+        reputation = 80;
         reputationSlider.maxValue = maxReputation;
         reputationSlider.value = reputation;
 
@@ -36,8 +36,6 @@ public class ReputationManager : MonoBehaviour
     {
         DelayOrder();
         reputationSlider.value = reputation;
-    
-        LoseCondition();
     }
 
     public void DenySale()
@@ -54,24 +52,42 @@ public class ReputationManager : MonoBehaviour
 
         if (isStudent && isCigarette)
         {
-            reputation += 3;
-            Debug.Log("Denied Cigarettes for Student, Current Reputation" + reputation);
+            reputation += 5;
+            Debug.Log("Denied cigarettes for student, +5 in Reputation, Current Reputation " + reputation);
         }
 
         else
         {
             reputation -= 5;
-            Debug.Log("Sale Denied, Current Reputation" + reputation);
+            Debug.Log("Sale denied, -5 in Reputation, Current Reputation " + reputation);
         }
 
         UpdateReputationUI();
         spawner.ClearOrder();
     }
 
-    void UpdateReputationUI()
+    public void RightItem()
     {
-        reputation = Mathf.Clamp(reputation, 0, maxReputation);
-        reputationSlider.value = reputation;
+        reputation += 3;
+        Debug.Log("Correct order, +3 in Reputation, Current Reputation " + reputation);
+    }
+
+    public void WrongItem()
+    {
+        reputation -= 5;
+        Debug.Log("Customer doesn't want the item, -5 in Reputation, Current Reputation " + reputation);
+    }
+
+    public void UtangMinusReputation()
+    {
+        reputation -= 15;
+        Debug.Log("Customer didn't paid their debt, -15 in Reputation, Current Reputation " + reputation);
+    }
+
+    public void UtangAddReputation()
+    {
+        reputation += 10;
+        Debug.Log("Customer paid their debt, +10 in Reputation, Current Reputation " + reputation);
     }
 
     void DelayOrder()
@@ -82,22 +98,43 @@ public class ReputationManager : MonoBehaviour
         if(delayTime.isDelayTime && timeWaiting >= 10f)
         {
             reputation -= 10;
-            Debug.Log("Customer lost patience, -10 in reputation");
+            Debug.Log("Customer lost patience, -10 in Reputation, Current Reputation " + reputation);
 
             delayTime.isDelayTime = false;
             
-            delayTime.ClearOrder();
+            ClearCustomer();
+            UpdateReputationUI();
         }
     }
 
-    void LoseCondition()
+    void ClearCustomer()
+{
+    var spawner = CustomerSpawner.Instance;
+    spawner.orderPanel.SetActive(false);
+    if(spawner.currentCustomer != null)
     {
-        if (reputation == 0)
-        {
-            Time.timeScale = 0f;
+        Destroy(spawner.currentCustomer);
+        spawner.currentCustomer = null;
+    }
+}
 
-            Debug.Log("You lose");
-            loseUIPanel.SetActive(true);
+    public void LoseCondition()
+    {
+        
+        Time.timeScale = 0f;
+
+        Debug.Log("You lose, You Didn't reached the requirements of " + LevelManager.Instance.requiredReputation + " Reputation, Current Reputation " + reputation);
+        loseUIPanel.SetActive(true);
+    }
+
+    void UpdateReputationUI()
+    {
+        reputation = Mathf.Clamp(reputation, 0, maxReputation);
+        reputationSlider.value = reputation;
+
+        if (reputation <= 0)
+        {
+            LoseCondition();
         }
     }
 }
