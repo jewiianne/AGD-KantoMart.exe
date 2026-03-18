@@ -8,6 +8,7 @@ public class PlayerInventory : MonoBehaviour
     public List<GameObject> itemDisplayInventory;
     public int maxSlot = 5;
     public int selectedSlotIndex = 0;
+    public Sprite emptySlotSprite;
     public static PlayerInventory Instance;
 
     void Awake()
@@ -83,25 +84,33 @@ public class PlayerInventory : MonoBehaviour
 
     public void UpdateInventoryUI()
     {
-        foreach (GameObject slot in itemDisplayInventory) slot.SetActive(false);
-
-        int currentSlotIndex = 0;
-
-        for (int i = 0; i < currentItems.Count; i++)
+        for (int i = 0; i < itemDisplayInventory.Count; i++)
         {
-            if (currentSlotIndex < itemDisplayInventory.Count)
+            var image = itemDisplayInventory[i].GetComponentInChildren<UnityEngine.UI.Image>();
+            
+            if (i < currentItems.Count)
             {
-                SetSlot(currentSlotIndex, currentItems[i].itemSprite);
-                currentSlotIndex++;
+                image.sprite = currentItems[i].itemSprite;
+                image.color = Color.white; 
             }
-        }
-
-        for (int i = 0; i < currentBoxItems.Count; i++)
-        {
-            if (currentSlotIndex < itemDisplayInventory.Count)
+            else if (i < (currentItems.Count + currentBoxItems.Count))
             {
-                SetSlot(currentSlotIndex, currentBoxItems[i].boxItemSprite); 
-                currentSlotIndex++;
+                int boxIndex = i - currentItems.Count;
+                image.sprite = currentBoxItems[boxIndex].boxItemSprite;
+                image.color = Color.white;
+            }
+            else
+            {
+                image.sprite = emptySlotSprite;
+            }
+
+            if (i == selectedSlotIndex)
+            {
+                itemDisplayInventory[i].transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);   
+            }
+            else
+            {
+                itemDisplayInventory[i].transform.localScale = Vector3.one;   
             }
         }
     }

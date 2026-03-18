@@ -9,6 +9,21 @@ public class BoxItems : ScriptableObject
     public string boxItemName;
     public GameObject boxItemPrefab;
     public Sprite boxItemSprite;
-    public int boxItemPrice;
+    public float boxItemPrice;
+    public float boxBasePrice;
     public int boxItemInsideCount = 5;
+    public static BoxItems Instance;
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
+    private void OnEnable()
+    {
+        if (boxBasePrice > 0)
+        {
+            boxItemPrice = boxBasePrice;
+        }
+    }
 }

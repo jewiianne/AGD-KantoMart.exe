@@ -1,11 +1,15 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
+using TMPro;
 
 public class ReputationManager : MonoBehaviour
 {
     public Button denyButton;
     public Slider reputationSlider;
     public GameObject loseUIPanel;
+    public TextMeshProUGUI reputationChangeText;
+    public GameObject wasteWarningUI;
 
     public int reputation;
     public int maxReputation = 100;
@@ -15,11 +19,12 @@ public class ReputationManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        wasteWarningUI.SetActive(false);
     }
 
     void Start()
     {
-        reputation = 80;
+        reputation = 100;
         reputationSlider.maxValue = maxReputation;
         reputationSlider.value = reputation;
 
@@ -38,6 +43,24 @@ public class ReputationManager : MonoBehaviour
         reputationSlider.value = reputation;
     }
 
+    public void CheckPriceFairness()
+    {
+        var spawner = CustomerSpawner.Instance;
+        if (spawner == null || spawner.currentItem == null) return;
+
+        float fairPrice = spawner.currentItem.itemPrice;
+
+        if (spawner.currentItem.itemPrice > (spawner.currentItem.basePrice * 1.15f)) 
+        {
+            Debug.Log("Customer noticed overpricing! Leaving...");
+
+            ChangeReputation(-15); 
+
+            ClearCustomer();
+            spawner.ClearOrder();
+        }
+    }
+
     public void DenySale()
     {
         var spawner = CustomerSpawner.Instance;
@@ -52,13 +75,13 @@ public class ReputationManager : MonoBehaviour
 
         if (isStudent && isCigarette)
         {
-            reputation += 5;
+            ChangeReputation(5);
             Debug.Log("Denied cigarettes for student, +5 in Reputation, Current Reputation " + reputation);
         }
 
         else
         {
-            reputation -= 5;
+            ChangeReputation(-5);
             Debug.Log("Sale denied, -5 in Reputation, Current Reputation " + reputation);
         }
 
@@ -68,55 +91,82 @@ public class ReputationManager : MonoBehaviour
 
     public void RightItem()
     {
-        reputation += 3;
+        ChangeReputation(3);
         Debug.Log("Correct order, +3 in Reputation, Current Reputation " + reputation);
     }
 
     public void WrongItem()
     {
-        reputation -= 5;
+        ChangeReputation(-5);
         Debug.Log("Customer doesn't want the item, -5 in Reputation, Current Reputation " + reputation);
     }
 
     public void UtangMinusReputation()
     {
-        reputation -= 15;
+        ChangeReputation(-15);
         Debug.Log("Customer didn't paid their debt, -15 in Reputation, Current Reputation " + reputation);
     }
 
     public void UtangAddReputation()
     {
-        reputation += 10;
+        ChangeReputation(+10);
         Debug.Log("Customer paid their debt, +10 in Reputation, Current Reputation " + reputation);
     }
 
     void DelayOrder()
     {
-        var delayTime = CustomerSpawner.Instance;
-        float timeWaiting = Time.time - delayTime.lastSpawnTime;
+        var spawner = CustomerSpawner.Instance;
 
-        if(delayTime.isDelayTime && timeWaiting >= 10f)
+        if (spawner.isDelayTime && spawner.currentCustomer != null)
         {
-            reputation -= 10;
-            Debug.Log("Customer lost patience, -10 in Reputation, Current Reputation " + reputation);
+            float timeWaiting = Time.time - spawner.lastSpawnTime;
 
-            delayTime.isDelayTime = false;
-            
-            ClearCustomer();
-            UpdateReputationUI();
+            if (timeWaiting >= 10f)
+            {
+                ChangeReputation(-10);
+                Debug.Log("Customer lost patience, -10 in Reputation");
+
+                spawner.isDelayTime = false; 
+                
+                ClearCustomer();
+                UpdateReputationUI();
+            }
+        }
+        else 
+        {
+            spawner.isDelayTime = false;
         }
     }
 
-    void ClearCustomer()
-{
-    var spawner = CustomerSpawner.Instance;
-    spawner.orderPanel.SetActive(false);
-    if(spawner.currentCustomer != null)
+    public void ItemWastedPenalty()
     {
-        Destroy(spawner.currentCustomer);
-        spawner.currentCustomer = null;
+        ChangeReputation(-10);
+        Debug.Log("Item wasted! -10 Reputation. Current: " + reputation);
+        UpdateReputationUI();
+        
+        StopAllCoroutines(); 
+        StartCoroutine(ShowWasteUI());
     }
-}
+
+    private IEnumerator ShowWasteUI()
+    {
+        if (wasteWarningUI != null)
+        {
+            wasteWarningUI.SetActive(true);
+            yield return new WaitForSeconds(5f);
+            wasteWarningUI.SetActive(false);
+        }
+    }
+    void ClearCustomer()
+    {
+        var spawner = CustomerSpawner.Instance;
+        spawner.orderPanel.SetActive(false);
+        if(spawner.currentCustomer != null)
+        {
+            Destroy(spawner.currentCustomer);
+            spawner.currentCustomer = null;
+        }
+    }
 
     public void LoseCondition()
     {
@@ -136,5 +186,31 @@ public class ReputationManager : MonoBehaviour
         {
             LoseCondition();
         }
+    }
+
+    public void ChangeReputation(int amount)
+    {
+        reputation += amount;
+        reputation = Mathf.Clamp(reputation, 0, maxReputation);
+        
+        UpdateReputationUI();
+
+        if (reputationChangeText != null)
+        {
+            string prefix = amount > 0 ? "+" : "";
+            reputationChangeText.text = $"{prefix}{amount}";
+            
+            reputationChangeText.color = amount > 0 ? Color.black : Color.red;
+            
+            StopCoroutine("ShowReputationFeedback");
+            StartCoroutine(ShowReputationFeedback());
+        }
+    }
+
+    private IEnumerator ShowReputationFeedback()
+    {
+        reputationChangeText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        reputationChangeText.gameObject.SetActive(false);
     }
 }

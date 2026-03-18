@@ -103,6 +103,7 @@ public class CustomerSpawner : MonoBehaviour
 
     public void ClearOrder()
     {
+        isDelayTime = false;
         orderPanel.SetActive(false);
         if(currentCustomer != null)
         {

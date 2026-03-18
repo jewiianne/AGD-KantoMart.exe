@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 812fd3b823a2a8240a44ad3deac8d6d8, type: 3}
+  m_Name: BoxofRedChips
+  m_EditorClassIdentifier: Assembly-CSharp::BoxItems
+  itemData: {fileID: 11400000, guid: d8208c4b198ec9648b7524e2e76b6736, type: 2}
+  boxItemName: RedChips
+  boxItemPrefab: {fileID: 7955254042806310895, guid: 2b78541b8ab118741ba694c1ff6ad479, type: 3}
+  boxItemSprite: {fileID: -1507476964, guid: 64ebed2fe7973c747bb7103f0c6a3fff, type: 3}
+  boxItemPrice: 80
+  boxItemInsideCount: 5

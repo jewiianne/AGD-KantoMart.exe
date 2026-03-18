@@ -10,11 +10,11 @@ public class LevelManager : MonoBehaviour
     public int targetCustomers = 20;
     public int customersServed;
     public int currentDayIndex = 0;
-    private string[] daysOfWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    private string[] daysOfWeek = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
     private float initializationTime;
 
     [Header("Timer")]
-    public float openingHour = 8f; 
+    public float openingHour = 8f;
     public float closingHour = 20f;
     public float timeMultiplier = 600f;
     private float currentInGameTime;
@@ -36,33 +36,38 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        initializationTime = Time.time;
     }
 
     void Start()
     {
-        endDayButton.SetActive(false);
         PrepareLevel();
+        endDayButton.SetActive(false);
     }
 
     void Update()
     {
         if (isDayRunning)
         {
-            TickClock();
+            currentInGameTime += (Time.deltaTime / 3600f) * timeMultiplier;
+
+            UpdateGameTimer();
+
+            if (currentInGameTime >= closingHour)
+            {
+                currentInGameTime = closingHour;
+                isDayRunning = false;
+                CustomerSpawner.Instance.StopSpawning();
+                
+                if (customersServed >= targetCustomers)
+                {
+                    endDayButton.SetActive(true);
+                }
+                else 
+                {
+                    Debug.Log("Day ended but quota not met!");
+                }
+            }
         }
-    }
-
-    void TickClock()
-    {
-        currentInGameTime += (Time.deltaTime * timeMultiplier) / 3600f;
-
-        if (currentInGameTime >= closingHour)
-        {
-            currentInGameTime = closingHour;
-        }
-
-        UpdateGameTimer();
     }
 
     void UpdateGameTimer()
@@ -83,26 +88,29 @@ public class LevelManager : MonoBehaviour
         UpdateGameTimer();
 
         startDayPanel.SetActive(true);
+        endDayButton.SetActive(false);
     }
 
     public void StartDay()
     {
-        Time.timeScale = 1f;
         isDayRunning = true;
         startDayPanel.SetActive(false);
-        
-        StartCoroutine(CustomerSpawner.Instance.SpawnRoutine());
+        endDayButton.SetActive(false);
+
+        if (CustomerSpawner.Instance != null)
+        {
+            StartCoroutine(CustomerSpawner.Instance.SpawnRoutine());
+        }
     }
 
     void CheckForRandomReputationChallenge()
     {
-        if (Random.value <= 0.10f) 
+        if (Random.value <= 0.10f)
         {
             isReputationChallengeActive = true;
             requiredReputation = Mathf.Round(Random.Range(minRandomRep, maxRandomRep));
             reputationGoalText.text = $"Goal: {requiredReputation}% Rep";
         }
-
         else
         {
             isReputationChallengeActive = false;
@@ -111,14 +119,13 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-   public void CustomerServed()
+    public void CustomerServed()
     {
         customersServed++;
-        
+
         if (customersServed >= targetCustomers)
         {
             CustomerSpawner.Instance.StopSpawning();
-
             endDayButton.SetActive(true);
             Debug.Log("Quota met! You can now end the day.");
         }
@@ -126,6 +133,8 @@ public class LevelManager : MonoBehaviour
 
     public void EndDay()
     {
+        endDayButton.SetActive(false);
+        
         if (isReputationChallengeActive && ReputationManager.Instance.reputation < requiredReputation)
         {
             Debug.Log("Cannot proceed: Reputation too low!");
@@ -135,11 +144,16 @@ public class LevelManager : MonoBehaviour
 
         isDayRunning = false;
         endDayButton.SetActive(false);
-
         CustomerSpawner.Instance.ClearOrder();
 
         currentDayIndex++;
+        string nextDay = daysOfWeek[currentDayIndex % 7];
         Debug.Log("Moving to " + daysOfWeek[currentDayIndex % 7]);
+
+        if (nextDay == "Sunday")
+        {
+            Inflation.Instance.ApplySundayInflation();
+        }
 
         PrepareLevel();
     }
@@ -147,15 +161,12 @@ public class LevelManager : MonoBehaviour
     public void OpenPanel()
     {
         startDayPanel.SetActive(true);
-
-        if (startDayPanel)
-        {
-            Time.timeScale = 0f;
-        }
+        Time.timeScale = 0f;
     }
 
     public void ClosePanel()
     {
         startDayPanel.SetActive(false);
+        if (isDayRunning) Time.timeScale = 1f;
     }
 }

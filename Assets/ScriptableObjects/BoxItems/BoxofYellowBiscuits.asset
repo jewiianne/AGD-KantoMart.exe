@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 812fd3b823a2a8240a44ad3deac8d6d8, type: 3}
+  m_Name: BoxofYellowBiscuits
+  m_EditorClassIdentifier: Assembly-CSharp::BoxItems
+  itemData: {fileID: 11400000, guid: a4cf69d0bd39a154d9ed016cb5709b80, type: 2}
+  boxItemName: YellowBiscuit
+  boxItemPrefab: {fileID: 7411303005896012005, guid: 3eb9c4f7ec04e2d43bf6673430e40b25, type: 3}
+  boxItemSprite: {fileID: -48371772, guid: 64ebed2fe7973c747bb7103f0c6a3fff, type: 3}
+  boxItemPrice: 60
+  boxItemInsideCount: 5

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d24072722e5cbfa419416921d21013fb, type: 3}
+  m_Name: BlueChips
+  m_EditorClassIdentifier: Assembly-CSharp::Items
+  itemName: BlueChips
+  itemPrice: 20
+  basePrice: 20
+  itemPrefab: {fileID: 7172094194568478494, guid: 6c0cc7d8880af2a4f8c4c56e3518237e, type: 3}
+  itemSprite: {fileID: -5365965032644328853, guid: c73ff56879b185f4ebfbe56900c51515, type: 3}
+  isAgeRestricted: 0
+  isStackable: 0
+  stockCount: -3
+  maxStock: 5

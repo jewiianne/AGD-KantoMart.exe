@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 812fd3b823a2a8240a44ad3deac8d6d8, type: 3}
+  m_Name: BoxofCigarettes
+  m_EditorClassIdentifier: Assembly-CSharp::BoxItems
+  itemData: {fileID: 11400000, guid: 0a60b637a8f91ee48877fc40a434afdb, type: 2}
+  boxItemName: Cigarettes
+  boxItemPrefab: {fileID: 3555800111018437856, guid: d8a4148c800e374438ca95befe37ec39, type: 3}
+  boxItemSprite: {fileID: 797483756, guid: 64ebed2fe7973c747bb7103f0c6a3fff, type: 3}
+  boxItemPrice: 300
+  boxItemInsideCount: 5

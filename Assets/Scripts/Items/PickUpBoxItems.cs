@@ -1,11 +1,20 @@
 using UnityEngine;
+using System.Collections; // Needed for Coroutines
 
 public class PickUpBoxItems : MonoBehaviour
 {
     public BoxItems boxItem;
     private bool isPlayerInRange = false;
+    
+    private float despawnTime = 15f;
+    private bool wasPickedUp = false;
 
-     void Update()
+    void Start()
+    {
+        Invoke("ExpireItem", despawnTime);
+    }
+
+    void Update()
     {
         if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
         {
@@ -13,8 +22,10 @@ public class PickUpBoxItems : MonoBehaviour
             {
                 if (PlayerInventory.Instance.CanReceiveBox())
                 {
+                    wasPickedUp = true;
+                    CancelInvoke("ExpireItem"); 
+
                     PlayerInventory.Instance.ReceiveBox(boxItem);
-                    
                     Debug.Log("Picked up the box: " + boxItem.boxItemName);
                     Destroy(gameObject);
                 }
@@ -26,14 +37,28 @@ public class PickUpBoxItems : MonoBehaviour
         }
     }
 
+    void ExpireItem()
+    {
+        if (!wasPickedUp)
+        {
+            Debug.Log(boxItem.boxItemName + " expired and was removed!");
+            
+            if (ReputationManager.Instance != null)
+            {
+                ReputationManager.Instance.ItemWastedPenalty();
+            }
+
+            Destroy(gameObject);
+        }
+    }
+
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
             isPlayerInRange = true;
             Renderer renderer = GetComponent<Renderer>();
-            renderer.material.color = Color.grey;
-            Debug.Log("Player is in range to take item");
+            if(renderer != null) renderer.material.color = Color.grey;
         }
     }
 
@@ -43,8 +68,7 @@ public class PickUpBoxItems : MonoBehaviour
         {
             isPlayerInRange = false;
             Renderer renderer = GetComponent<Renderer>();
-            renderer.material.color = Color.white;
-            Debug.Log("Player left the area");
+            if(renderer != null) renderer.material.color = Color.white;
         }
     }
 }

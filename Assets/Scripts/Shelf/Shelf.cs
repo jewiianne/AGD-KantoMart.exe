@@ -86,15 +86,18 @@ public class Shelf : MonoBehaviour
             itemStockText.text = $"{itemInStock.Count}/{maxStock}";
         }
 
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        
-        if (stockCount > 0 && itemInStock != null && itemInStock.Count > 0)
+        if (itemPrefab != null) 
         {
-            sr.sprite = itemInStock[0].itemSprite;
-        }
-        else
-        {
-            sr.sprite = null; 
+            if (stockCount > 0 && itemInStock != null && itemInStock.Count > 0)
+            {
+                itemPrefab.sprite = itemInStock[0].itemSprite;
+                itemPrefab.gameObject.SetActive(true);
+            }
+            else
+            {
+                itemPrefab.sprite = null; 
+                //itemPrefab.gameObject.SetActive(false);
+            }
         }
     }
 

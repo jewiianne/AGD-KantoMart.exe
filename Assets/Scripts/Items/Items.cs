@@ -19,12 +19,18 @@ public class Items : ScriptableObject
 
     public static Items Instance;
 
-    public void OnEnable()
-    {
-        itemPrice = basePrice;
-    }
     void Awake()
     {
         Instance = this;
     }   
+
+    public float GetFairPrice()
+    {
+        return itemPrice;
+    }
+
+    public void OnEnable()
+    {
+        itemPrice = basePrice;
+    }
 }

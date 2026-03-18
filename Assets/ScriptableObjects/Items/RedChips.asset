@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d24072722e5cbfa419416921d21013fb, type: 3}
+  m_Name: RedChips
+  m_EditorClassIdentifier: Assembly-CSharp::Items
+  itemName: RedChips
+  itemPrice: 20
+  basePrice: 20
+  itemPrefab: {fileID: 183337682216431367, guid: 40ccbb8d71e7b9d449fd19894e1f1e04, type: 3}
+  itemSprite: {fileID: 7579778505308976632, guid: c73ff56879b185f4ebfbe56900c51515, type: 3}
+  isAgeRestricted: 0
+  isStackable: 0
+  stockCount: -8
+  maxStock: 5

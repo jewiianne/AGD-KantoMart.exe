@@ -30,15 +30,22 @@ public class SellManager : MonoBehaviour
         }
 
         List<Items> playerHas = PlayerInventory.Instance.currentItems;
-        List<Items> customerWants = CustomerSpawner.Instance.itemOrder;
+        
+        if (CustomerSpawner.Instance.itemOrder == null || CustomerSpawner.Instance.itemOrder.Count == 0)
+        {
+            return;
+        }
 
-        if (playerHas != null && playerHas.Contains(customerWants[0]))
+        Items customerWants = CustomerSpawner.Instance.itemOrder[0];
+
+        if (playerHas != null && playerHas.Contains(customerWants))
         {
             sellPanel.SetActive(true);
+            UpdateUI(customerWants);
         }
         else
         {
-            Debug.Log("You don't have any items");
+            Debug.Log("You don't have the item this customer wants!");
         }
     }
 
@@ -74,31 +81,39 @@ public class SellManager : MonoBehaviour
 
             if (wantedItem != null && itemToSell == wantedItem)
             {
+                float priceLimit = (itemToSell.basePrice * 1.15f) + 0.01f;
+
+                Debug.Log($"Checking: Price({itemToSell.itemPrice}) vs Limit({priceLimit}). Base is {itemToSell.basePrice}");
+
+                if (itemToSell.itemPrice > priceLimit)
+                {
+                    Debug.Log("Customer thinks it's too expensive!");
+                    ReputationManager.Instance.ChangeReputation(-15); 
+                    FinishTransaction(); 
+                    return; 
+                }
+
                 if (currentPaymentMethod == "Cash")
                 {
                     MoneyManager.Instance.currentMoney += itemToSell.itemPrice; 
                     MoneyManager.Instance.UpdateMoney();
                     ReputationManager.Instance.RightItem();
-
-                    Debug.Log($"Sold {itemToSell.itemName} for {itemToSell.itemPrice}");   
                 }
-
                 else
                 {
                     UtangSystem(itemToSell);  
                 }
+                
+                itemToSell.stockCount--;
+                playerInventory.Remove(itemToSell);
+                PlayerInventory.Instance.UpdateInventoryUI();
+                FinishTransaction();
             }
-
             else
             {
                 ReputationManager.Instance.WrongItem();
+                FinishTransaction();
             }
-            
-            itemToSell.stockCount--;
-            playerInventory.Remove(itemToSell);
-            PlayerInventory.Instance.UpdateInventoryUI();
-
-            FinishTransaction();
         }
     }
 

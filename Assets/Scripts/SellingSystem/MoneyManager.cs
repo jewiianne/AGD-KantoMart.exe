@@ -17,7 +17,7 @@ public class MoneyManager : MonoBehaviour
 
     void Start()
     {
-        currentMoney = 80;
+        currentMoney = 300;
         MoneyText.text = currentMoney.ToString();
     }
 
