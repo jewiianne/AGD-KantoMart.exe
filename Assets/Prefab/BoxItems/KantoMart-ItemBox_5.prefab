@@ -180,3 +180,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickUpBoxItems
   boxItem: {fileID: 11400000, guid: 05f6c8f8497488d49bf8b0765ec7cab7, type: 2}
+  pickupSound: {fileID: 8300000, guid: aab189b3daf94fb4084d4b9d92daa715, type: 3}

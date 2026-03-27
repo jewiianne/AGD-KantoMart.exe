@@ -137,8 +137,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c633cde2f5b938242aa97a4a179ee778
-      internalID: 1936549200
+      spriteID: 2ee6f5cad986883498831b4e4e59f338
+      internalID: -1378163730
       vertices: []
       indices: 
       edges: []
@@ -147,7 +147,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 3959c6b12ff6cfd41b1784132d43102b
+    spriteID: 09d9ef9f2584c714e8d7aeb9fa6a3b28
     internalID: 0
     vertices: []
     indices: 
@@ -160,7 +160,7 @@ TextureImporter:
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":2.0},"gridSpriteSize":{"x":64.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       KantoMart-StartandEndButton_0: -2574948887746659240
-      KantoMart-StartandEndButton_1: 1936549200
+      KantoMart-StartandEndButton_1: -1378163730
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

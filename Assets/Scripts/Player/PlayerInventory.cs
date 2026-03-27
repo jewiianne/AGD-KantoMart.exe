@@ -87,23 +87,26 @@ public class PlayerInventory : MonoBehaviour
         for (int i = 0; i < itemDisplayInventory.Count; i++)
         {
             var image = itemDisplayInventory[i].GetComponentInChildren<UnityEngine.UI.Image>();
-            
+            if (image == null) continue;
+
             if (i < currentItems.Count)
             {
                 image.sprite = currentItems[i].itemSprite;
-                image.color = Color.white; 
+                image.color = Color.white;
             }
             else if (i < (currentItems.Count + currentBoxItems.Count))
             {
                 int boxIndex = i - currentItems.Count;
                 image.sprite = currentBoxItems[boxIndex].boxItemSprite;
-                image.color = Color.white;
+                image.color = Color.white; 
             }
             else
             {
                 image.sprite = emptySlotSprite;
+                
+                image.sprite = emptySlotSprite;
+                image.color = new Color(1, 1, 1, 0.4f);
             }
-
             if (i == selectedSlotIndex)
             {
                 itemDisplayInventory[i].transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);   

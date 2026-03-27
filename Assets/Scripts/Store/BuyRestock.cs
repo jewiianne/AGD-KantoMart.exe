@@ -8,12 +8,19 @@ public class BuyRestock : MonoBehaviour
     public GameObject yellowBiscuisPrefab;
     public GameObject cigarettesPrefab;
 
+    public AudioClip buyItem;
+
     public void BuyBlueChips()
     {
         if(MoneyManager.Instance.currentMoney >= 80)
         {
             MoneyManager.Instance.currentMoney -= 80;
             MoneyManager.Instance.MoneyText.text = MoneyManager.Instance.currentMoney.ToString();
+
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySFX(buyItem);
+            }
 
             SpawnBlueChips();
         }
@@ -31,6 +38,11 @@ public class BuyRestock : MonoBehaviour
             MoneyManager.Instance.currentMoney -= 80;
             MoneyManager.Instance.MoneyText.text = MoneyManager.Instance.currentMoney.ToString();
 
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySFX(buyItem);
+            }
+
             SpawnRedChips();
         }
     }
@@ -46,6 +58,11 @@ public class BuyRestock : MonoBehaviour
         {
             MoneyManager.Instance.currentMoney -= 60;
             MoneyManager.Instance.MoneyText.text = MoneyManager.Instance.currentMoney.ToString();
+
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySFX(buyItem);
+            }
 
             SpawnRedBiscuits();
         }
@@ -63,6 +80,11 @@ public class BuyRestock : MonoBehaviour
             MoneyManager.Instance.currentMoney -= 60;
             MoneyManager.Instance.MoneyText.text = MoneyManager.Instance.currentMoney.ToString();
 
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySFX(buyItem);
+            }
+
             SpawnYellowBiscuits();
         }
     }
@@ -78,6 +100,11 @@ public class BuyRestock : MonoBehaviour
         {
             MoneyManager.Instance.currentMoney -= 300;
             MoneyManager.Instance.MoneyText.text = MoneyManager.Instance.currentMoney.ToString();
+
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySFX(buyItem);
+            }
 
             SpawnCigarettes();
         }

@@ -9,6 +9,7 @@ public class SellManager : MonoBehaviour
     public float currentTotalPrice = 0;
     
     public GameObject sellPanel;
+    public AudioClip sellSoundEffects;
     public TextMeshProUGUI itemsText;
     public TextMeshProUGUI totalPriceText;
     public TextMeshProUGUI paymentMethodText;
@@ -71,9 +72,9 @@ public class SellManager : MonoBehaviour
     }
 
     public void SellButton()
-    {
-        List<Items> playerInventory = PlayerInventory.Instance.currentItems;
-        Items wantedItem = CustomerSpawner.Instance.currentItem;
+{
+    List<Items> playerInventory = PlayerInventory.Instance.currentItems;
+    Items wantedItem = CustomerSpawner.Instance.currentItem;
 
         if (playerInventory.Count > 0)
         {
@@ -83,12 +84,16 @@ public class SellManager : MonoBehaviour
             {
                 float priceLimit = (itemToSell.basePrice * 1.15f) + 0.01f;
 
-                Debug.Log($"Checking: Price({itemToSell.itemPrice}) vs Limit({priceLimit}). Base is {itemToSell.basePrice}");
+                if (SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.PlaySFX(sellSoundEffects);
+                }
 
                 if (itemToSell.itemPrice > priceLimit)
                 {
-                    Debug.Log("Customer thinks it's too expensive!");
+                    Debug.Log("Too expensive!");
                     ReputationManager.Instance.ChangeReputation(-15); 
+                    RemoveItemFromInventory(itemToSell);
                     FinishTransaction(); 
                     return; 
                 }
@@ -104,21 +109,31 @@ public class SellManager : MonoBehaviour
                     UtangSystem(itemToSell);  
                 }
                 
-                itemToSell.stockCount--;
-                playerInventory.Remove(itemToSell);
-                PlayerInventory.Instance.UpdateInventoryUI();
+                RemoveItemFromInventory(itemToSell);
                 FinishTransaction();
             }
             else
             {
+                Debug.Log("Wrong item given!");
                 ReputationManager.Instance.WrongItem();
+                
+                RemoveItemFromInventory(itemToSell);
+                
                 FinishTransaction();
             }
         }
     }
 
+    void RemoveItemFromInventory(Items item)
+    {
+        item.stockCount--;
+        PlayerInventory.Instance.currentItems.Remove(item);
+        PlayerInventory.Instance.UpdateInventoryUI();
+    }
+
     public void DenyButton()
     {
+        Debug.Log("Sale Denied.");
         ReputationManager.Instance.DenySale();
         FinishTransaction();
     }
@@ -140,7 +155,11 @@ public class SellManager : MonoBehaviour
 
     private void FinishTransaction()
     {
-        sellPanel.SetActive(false);
-        CustomerSpawner.Instance.ClearOrder();
+        if (sellPanel != null) sellPanel.SetActive(false);
+    
+        if (CustomerSpawner.Instance != null)
+        {
+            CustomerSpawner.Instance.ClearOrder(true); 
+        }
     }
 }

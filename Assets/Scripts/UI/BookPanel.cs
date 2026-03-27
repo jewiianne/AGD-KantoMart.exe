@@ -6,9 +6,10 @@ public class BookPanel : MonoBehaviour, IPointerDownHandler
 {
     public GameObject bookUIPanel;
     public GameObject reputationBar;
+    public GameObject reputationStatus;
     public GameObject startUI;
     public GameObject endUI;
-    public GameObject openPanel;
+
     public GameObject playerInventory;
 
     public void Start()
@@ -20,9 +21,9 @@ public class BookPanel : MonoBehaviour, IPointerDownHandler
     {
         bookUIPanel.SetActive(true);
         reputationBar.SetActive(false);
+        reputationStatus.SetActive(false);
         startUI.SetActive(false);
         endUI.SetActive(false);
-        openPanel.SetActive(false);
         playerInventory.SetActive(false);
     }
 
@@ -30,9 +31,9 @@ public class BookPanel : MonoBehaviour, IPointerDownHandler
     {
         bookUIPanel.SetActive(false);
         reputationBar.SetActive(true);
+        reputationStatus.SetActive(true);
         startUI.SetActive(true);
-        endUI.SetActive(true);
-        openPanel.SetActive(true);
+        endUI.SetActive(false);
         playerInventory.SetActive(true);
     }
 }

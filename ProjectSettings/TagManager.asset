@@ -91,7 +91,7 @@ TagManager:
   - name: UI
     uniqueID: 1066516067
     locked: 0
-  - name: BoolUI
+  - name: BookUI
     uniqueID: 187652163
     locked: 0
   m_RenderingLayers:

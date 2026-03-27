@@ -7,23 +7,15 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Instance;
 
     [Header("Level Settings")]
-    public int targetCustomers = 20;
+    public int targetCustomers;
     public int customersServed;
     public int currentDayIndex = 0;
     private string[] daysOfWeek = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-    private float initializationTime;
-
-    [Header("Timer")]
-    public float openingHour = 8f;
-    public float closingHour = 20f;
-    public float timeMultiplier = 600f;
-    private float currentInGameTime;
-    private bool isDayRunning = false;
 
     [Header("UI Elements")]
     public GameObject startDayPanel;
     public GameObject endDayButton;
-    public TextMeshProUGUI timerText;
+    public TextMeshProUGUI quotaText; 
     public TextMeshProUGUI dayText;
     public TextMeshProUGUI reputationGoalText;
 
@@ -33,6 +25,8 @@ public class LevelManager : MonoBehaviour
     public float requiredReputation = 0;
     private bool isReputationChallengeActive = false;
 
+    private bool isDayRunning = false;
+
     void Awake()
     {
         Instance = this;
@@ -40,66 +34,69 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
+        if (endDayButton != null) endDayButton.SetActive(false);
         PrepareLevel();
-        endDayButton.SetActive(false);
     }
 
     void Update()
     {
         if (isDayRunning)
         {
-            currentInGameTime += (Time.deltaTime / 3600f) * timeMultiplier;
-
-            UpdateGameTimer();
-
-            if (currentInGameTime >= closingHour)
-            {
-                currentInGameTime = closingHour;
-                isDayRunning = false;
-                CustomerSpawner.Instance.StopSpawning();
-                
-                if (customersServed >= targetCustomers)
-                {
-                    endDayButton.SetActive(true);
-                }
-                else 
-                {
-                    Debug.Log("Day ended but quota not met!");
-                }
-            }
+            UpdateQuotaUI();
         }
     }
 
-    void UpdateGameTimer()
+    void UpdateQuotaUI()
     {
-        int hours = Mathf.FloorToInt(currentInGameTime);
-        int minutes = Mathf.FloorToInt((currentInGameTime - hours) * 60);
-
-        timerText.text = string.Format("{0:00}:{1:00}", hours, minutes);
+        if (quotaText != null)
+            quotaText.text = $"Goal: {customersServed} / {targetCustomers}";
     }
 
     public void PrepareLevel()
     {
+        isDayRunning = false;
         customersServed = 0;
-        currentInGameTime = openingHour;
+        
+        if (endDayButton != null) 
+        {
+            endDayButton.SetActive(false);
+        }
+        
+        targetCustomers = Random.Range(10, 31);
         dayText.text = daysOfWeek[currentDayIndex % 7];
 
         CheckForRandomReputationChallenge();
-        UpdateGameTimer();
+        UpdateQuotaUI();
 
         startDayPanel.SetActive(true);
-        endDayButton.SetActive(false);
     }
 
     public void StartDay()
     {
         isDayRunning = true;
         startDayPanel.SetActive(false);
-        endDayButton.SetActive(false);
+        
+
+        if (endDayButton != null) endDayButton.SetActive(false); 
 
         if (CustomerSpawner.Instance != null)
         {
             StartCoroutine(CustomerSpawner.Instance.SpawnRoutine());
+        }
+    }
+
+    public void CustomerServed()
+    {
+        customersServed++;
+        UpdateQuotaUI();
+
+        if (customersServed >= targetCustomers)
+        {
+            isDayRunning = false;
+            if (CustomerSpawner.Instance != null) CustomerSpawner.Instance.StopSpawning();
+            
+            if (endDayButton != null) endDayButton.SetActive(true);
+            Debug.Log("Quota met! Showing End Day button.");
         }
     }
 
@@ -109,53 +106,45 @@ public class LevelManager : MonoBehaviour
         {
             isReputationChallengeActive = true;
             requiredReputation = Mathf.Round(Random.Range(minRandomRep, maxRandomRep));
-            reputationGoalText.text = $"Goal: {requiredReputation}% Rep";
+            reputationGoalText.text = $"Reputation Goal: {requiredReputation}%";
         }
         else
         {
             isReputationChallengeActive = false;
             requiredReputation = 0;
-            reputationGoalText.text = "No Required Reputation to Reach";
-        }
-    }
-
-    public void CustomerServed()
-    {
-        customersServed++;
-
-        if (customersServed >= targetCustomers)
-        {
-            CustomerSpawner.Instance.StopSpawning();
-            endDayButton.SetActive(true);
-            Debug.Log("Quota met! You can now end the day.");
+            reputationGoalText.text = "No Reputation Requirement";
         }
     }
 
     public void EndDay()
     {
-        endDayButton.SetActive(false);
-        
-        if (isReputationChallengeActive && ReputationManager.Instance.reputation < requiredReputation)
+        if (isReputationChallengeActive)
         {
-            Debug.Log("Cannot proceed: Reputation too low!");
-            ReputationManager.Instance.LoseCondition();
-            return;
+            int currentRep = ReputationManager.Instance.reputation;
+
+            if (currentRep < requiredReputation)
+            {
+                Debug.Log($"Challenge Failed! Needed {requiredReputation}, but only had {currentRep}");
+                
+                ReputationManager.Instance.LoseCondition();
+                return;
+            }
+            else 
+            {
+                Debug.Log("Challenge Passed! Reputation goal met.");
+            }
         }
 
-        isDayRunning = false;
-        endDayButton.SetActive(false);
-        CustomerSpawner.Instance.ClearOrder();
+        if (endDayButton != null) endDayButton.SetActive(false);
+        
+        if (CustomerSpawner.Instance != null)
+        {
+            CustomerSpawner.Instance.ClearOrder(false); 
+        }
 
         currentDayIndex++;
-        string nextDay = daysOfWeek[currentDayIndex % 7];
-        Debug.Log("Moving to " + daysOfWeek[currentDayIndex % 7]);
-
-        if (nextDay == "Sunday")
-        {
-            Inflation.Instance.ApplySundayInflation();
-        }
-
         PrepareLevel();
+
     }
 
     public void OpenPanel()

@@ -5,7 +5,7 @@ public class PickUpBoxItems : MonoBehaviour
 {
     public BoxItems boxItem;
     private bool isPlayerInRange = false;
-    
+    public AudioClip pickupSound;
     private float despawnTime = 15f;
     private bool wasPickedUp = false;
 
@@ -28,6 +28,11 @@ public class PickUpBoxItems : MonoBehaviour
                     PlayerInventory.Instance.ReceiveBox(boxItem);
                     Debug.Log("Picked up the box: " + boxItem.boxItemName);
                     Destroy(gameObject);
+
+                    if (SoundManager.Instance != null)
+                    {
+                        SoundManager.Instance.PlaySFX(pickupSound);
+                    }
                 }
                 else
                 {

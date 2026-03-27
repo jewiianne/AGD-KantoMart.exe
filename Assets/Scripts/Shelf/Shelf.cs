@@ -28,29 +28,52 @@ public class Shelf : MonoBehaviour
         }
 
         int heldIndex = PlayerInventory.Instance.selectedSlotIndex;
+        Items itemToRestock = null;
+        bool isFromBox = false;
+        int boxIndex = -1;
 
         if (heldIndex < PlayerInventory.Instance.currentItems.Count)
         {
-            Items item = PlayerInventory.Instance.currentItems[heldIndex];
-            PlayerInventory.Instance.currentItems.RemoveAt(heldIndex);
-            itemInStock.Add(item);
+            itemToRestock = PlayerInventory.Instance.currentItems[heldIndex];
+            isFromBox = false;
         }
         else if (heldIndex < (PlayerInventory.Instance.currentItems.Count + PlayerInventory.Instance.currentBoxItems.Count))
         {
-            int boxIndex = heldIndex - PlayerInventory.Instance.currentItems.Count;
-            BoxItems currentBox = PlayerInventory.Instance.currentBoxItems[boxIndex];
+            boxIndex = heldIndex - PlayerInventory.Instance.currentItems.Count;
+            itemToRestock = PlayerInventory.Instance.currentBoxItems[boxIndex].itemData;
+            isFromBox = true;
+        }
 
-            itemInStock.Add(currentBox.itemData);
+        if (itemToRestock == null)
+        {
+            Debug.Log("No Item in this slot");
+            return;
+        }
+
+        if (itemInStock.Count > 0)
+        {
+            if (itemInStock[0].itemName != itemToRestock.itemName)
+            {
+                Debug.Log($"Cannot restock! This shelf is for {itemInStock[0].itemName}, not {itemToRestock.itemName}");
+                return;
+            }
+        }
+
+        if (!isFromBox)
+        {
+            itemInStock.Add(itemToRestock);
+            PlayerInventory.Instance.currentItems.RemoveAt(heldIndex);
+        }
+        else
+        {
+            itemInStock.Add(itemToRestock);
+            BoxItems currentBox = PlayerInventory.Instance.currentBoxItems[boxIndex];
             currentBox.boxItemInsideCount--;
 
             if (currentBox.boxItemInsideCount <= 0)
             {
                 PlayerInventory.Instance.currentBoxItems.RemoveAt(boxIndex);
             }
-        }
-        else
-        {
-            Debug.Log("No Item to this slot");
         }
         
         PlayerInventory.Instance.UpdateInventoryUI();

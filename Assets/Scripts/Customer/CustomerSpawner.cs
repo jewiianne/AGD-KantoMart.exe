@@ -101,16 +101,18 @@ public class CustomerSpawner : MonoBehaviour
 
     }
 
-    public void ClearOrder()
+ public void ClearOrder(bool wasSold = false)
     {
         isDelayTime = false;
-        orderPanel.SetActive(false);
-        if(currentCustomer != null)
+        if (orderPanel != null) orderPanel.SetActive(false);
+        
+        if (currentCustomer != null)
         {
-            if(LevelManager.Instance != null)
+            if (wasSold && LevelManager.Instance != null)
             {
                 LevelManager.Instance.CustomerServed();
             }
+            
             Destroy(currentCustomer);
             currentCustomer = null;
         }

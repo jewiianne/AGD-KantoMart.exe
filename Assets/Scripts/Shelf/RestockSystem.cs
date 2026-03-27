@@ -3,15 +3,21 @@ using UnityEngine;
 public class RestockSystem : MonoBehaviour
 {
     private bool isPlayerInRange = false;
+    public AudioClip restockSound;
     void Update()
     {
         if (isPlayerInRange && Input.GetKeyDown(KeyCode.Q))
         {
             Shelf shelf = GetComponentInParent<Shelf>();
             
-            if(PlayerInventory.Instance != null)
+            if(PlayerInventory.Instance != null && shelf != null)
             {
                 shelf.RestockShelf();
+
+                if (SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.PlaySFX(restockSound);
+                }
             }
 
             if(PlayerInventory.Instance != null && PlayerInventory.Instance.currentItems.Count == 0)
@@ -26,7 +32,8 @@ public class RestockSystem : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             isPlayerInRange = true;
-            GetComponent<SpriteRenderer>().color = Color.grey;
+            //Renderer renderer = GetComponentInParent<Renderer>();
+            //renderer.material.color = Color.grey;
             Debug.Log("Player is in range to restock shelf");
         }
     }
@@ -36,8 +43,8 @@ public class RestockSystem : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             isPlayerInRange = false;
-            Renderer renderer = GetComponent<Renderer>();
-            GetComponent<SpriteRenderer>().color = Color.white;
+            //Renderer renderer = GetComponentInParent<Renderer>();
+            //renderer.material.color = Color.white;
             Debug.Log("Player left the area");
         }
     }
