@@ -32,8 +32,8 @@ public class RestockSystem : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             isPlayerInRange = true;
-            //Renderer renderer = GetComponentInParent<Renderer>();
-            //renderer.material.color = Color.grey;
+            Renderer renderer = GetComponentInParent<Renderer>();
+            renderer.material.color = Color.grey;
             Debug.Log("Player is in range to restock shelf");
         }
     }
@@ -43,8 +43,8 @@ public class RestockSystem : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             isPlayerInRange = false;
-            //Renderer renderer = GetComponentInParent<Renderer>();
-            //renderer.material.color = Color.white;
+            Renderer renderer = GetComponentInParent<Renderer>();
+            renderer.material.color = Color.white;
             Debug.Log("Player left the area");
         }
     }
